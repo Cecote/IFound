@@ -16,7 +16,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:hint="Nome do usuário"
+            android:hint="Objeto perdido"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -25,7 +25,7 @@
             android:id="@+id/activity_formulario_produto_descricao"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Descrição do objeto"
+            android:hint="Local que o objeto foi encontrado"
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_produto_nome"
             app:layout_constraintStart_toStartOf="@id/activity_formulario_produto_nome"
             app:layout_constraintTop_toBottomOf="@id/activity_formulario_produto_nome" />
@@ -34,7 +34,7 @@
             android:id="@+id/activity_formulario_produto_local"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Local que o objeto foi encontrado"
+            android:hint="Contato para recuperação"
             app:layout_constraintEnd_toEndOf="@id/activity_formulario_produto_nome"
             app:layout_constraintStart_toStartOf="@id/activity_formulario_produto_nome"
             app:layout_constraintTop_toBottomOf="@id/activity_formulario_produto_descricao" />
