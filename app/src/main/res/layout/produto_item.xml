@@ -1,55 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="8dp"
+    app:strokeColor="@color/Orange"
+    app:strokeWidth="1dp"
+    app:cardElevation="8dp"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/produto_item_nome"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:fontFamily="@font/montserrat"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imageView"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="IFound" />
 
-    <TextView
-        android:id="@+id/produto_item_descricao"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@id/produto_item_nome"
-        app:layout_constraintStart_toStartOf="@id/produto_item_nome"
-        app:layout_constraintTop_toBottomOf="@id/produto_item_nome"
-        tools:text="objeto perdido:" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/produto_item_local"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@id/produto_item_nome"
-        app:layout_constraintStart_toStartOf="@id/produto_item_nome"
-        app:layout_constraintTop_toBottomOf="@id/produto_item_descricao"
-        tools:text="celular" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/produto_item_nome"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
+        <TextView
+            android:id="@+id/produtoItemItemPerdido"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:ellipsize="end"
+            android:fontFamily="@font/aclonica"
+            android:maxLines="1"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageView"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Item" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/produtoItemSituacao"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@android:color/holo_green_light"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/produtoItemItemPerdido"
+            app:layout_constraintStart_toStartOf="@id/produtoItemItemPerdido"
+            app:layout_constraintTop_toBottomOf="@id/produtoItemItemPerdido"
+            tools:text="Situação" />
+
+        <TextView
+            android:id="@+id/produtoItemLocal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintEnd_toEndOf="@id/produtoItemItemPerdido"
+            app:layout_constraintStart_toStartOf="@id/produtoItemItemPerdido"
+            app:layout_constraintTop_toBottomOf="@id/produtoItemSituacao"
+            tools:text="Local" />
+
+        <TextView
+            android:id="@+id/produtoItemContato"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@id/produtoItemItemPerdido"
+            app:layout_constraintStart_toStartOf="@id/produtoItemItemPerdido"
+            app:layout_constraintTop_toBottomOf="@id/produtoItemLocal"
+            tools:text="Contato" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="135dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/produtoItemItemPerdido"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/baby_yoda" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

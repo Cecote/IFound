@@ -1,47 +1,82 @@
 package br.com.alura.orgs.ui.recyclerview.adapter
 
+import android.app.Activity
 import android.content.Context
+import android.graphics.Bitmap
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import br.com.alura.orgs.R
 import br.com.alura.orgs.databinding.ProdutoItemBinding
-import br.com.alura.orgs.model.Produto
+import br.com.alura.orgs.model.Itens
+import android.content.Intent
+import android.graphics.BitmapFactory
+import android.widget.ImageView
+import kotlin.coroutines.coroutineContext
+
 
 class ListaProdutosAdapter(
     private val context: Context,
-    produtos: List<Produto>
+    itens: List<Itens>
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
-    private val produtos = produtos.toMutableList()
+    private val itens = itens.toMutableList()
+    class ViewHolder(private val binding: ProdutoItemBinding, private val context: Context) : RecyclerView.ViewHolder(binding.root){
+        fun vincula(item: Itens) {
+            val itemPerdido = binding.produtoItemItemPerdido
+            itemPerdido.text = item.itemPerdido
 
-    class ViewHolder(private val binding: ProdutoItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun vincula(produto: Produto) {
-            val nome = binding.produtoItemNome
-            nome.text = produto.nome
-            val descricao = binding.produtoItemDescricao
-            descricao.text = produto.descricao
+            val situacao = binding.produtoItemSituacao
+            situacao.text = item.situacao
+
             val local = binding.produtoItemLocal
-            local.text = produto.local
+            local.text = item.local
+
+            val contato = binding.produtoItemContato
+            contato.text = item.contato
+
+            // uma possível alternativa para esconder o container da img caso o usuário nao coloque nenhuma
+//            val visibility = if(item.img != null){
+//                View.VISIBLE
+//            }else{
+//                View.GONE
+//            }
+//            binding.imageView.visibility = visibility
+
+
+            val icon:Bitmap = BitmapFactory.decodeResource(context.resources,
+                R.drawable.erro)
+            if(item.img == null){
+                binding.imageView.setImageBitmap(icon)
+            }else{
+                binding.imageView.setImageBitmap(item.img)
+            }
+
+
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(context)
         val binding = ProdutoItemBinding.inflate(inflater, parent, false)
-        return ViewHolder(binding)
+        return ViewHolder(binding, context)
     }
 
-    override fun getItemCount(): Int = produtos.size
+    override fun getItemCount(): Int {
+        return itens.size
+    }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val produto = produtos[position]
-        holder.vincula(produto)
+        val item = itens[position]
+        holder.vincula(item)
+
     }
 
-    fun atualiza(produtos: List<Produto>) {
-        this.produtos.clear()
-        this.produtos.addAll(produtos)
+    fun atualiza(itens: List<Itens>) {
+        this.itens.clear()
+        this.itens.addAll(itens)
         notifyDataSetChanged()
     }
 

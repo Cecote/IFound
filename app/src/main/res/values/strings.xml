@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">iFound</string>
+    <string name="app_name">IFound</string>
+    <string name="item">Item</string>
+    <string name="situa_o">Situação</string>
+    <string name="local">Local</string>
+    <string name="contato">Contato</string>
+    <string name="salvar">Salvar</string>
+    <string name="teste">Teste</string>
+    <string name="inserir_imagem">Inserir imagem</string>
 </resources>
