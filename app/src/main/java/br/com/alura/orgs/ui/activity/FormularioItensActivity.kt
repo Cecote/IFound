@@ -67,6 +67,11 @@ class FormularioItensActivity : AppCompatActivity() {
 //            value.putExtra("bitMapImg", bitmap)
 //            startActivity(value)
             urlzinha = bitmap
+//            val extras = Bundle()
+//            extras.putParcelable("bitmapIMG", bitmap)
+//            val intentForms = Intent(this, DetalhesProdutoActivity::class.java )
+//            intentForms.putExtras(extras)
+//            startActivity(intentForms)
             binding.activityFormularioItemImagem.setImageBitmap(bitmap)
 
         }
@@ -147,12 +152,16 @@ class FormularioItensActivity : AppCompatActivity() {
         val campoContato = binding.activityFormularioContato
         val contato = campoContato.text.toString()
 
+        val campoDescricao = binding.activityFormularioItemDescricao
+        val descricao = campoDescricao.text.toString()
+
         return Itens(
             itemPerdido = itemPerdido,
             situacao = situacao,
             local = local,
             contato = contato,
-            img = urlzinha
+            img = urlzinha,
+            descricao = descricao
         )
     }
 }

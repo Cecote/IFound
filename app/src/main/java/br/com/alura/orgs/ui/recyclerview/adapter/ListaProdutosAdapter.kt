@@ -19,12 +19,30 @@ import kotlin.coroutines.coroutineContext
 
 class ListaProdutosAdapter(
     private val context: Context,
-    itens: List<Itens>
+    itens: List<Itens>,
+    // declaração da função para o listener do adapter
+    var quandoClicaNoItem: (produto: Itens) -> Unit = {}
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
 
     private val itens = itens.toMutableList()
-    class ViewHolder(private val binding: ProdutoItemBinding, private val context: Context) : RecyclerView.ViewHolder(binding.root){
+    inner class ViewHolder(private val binding: ProdutoItemBinding, private val context: Context) : RecyclerView.ViewHolder(binding.root){
+
+        // Considerando que o ViewHolder modifica de valor com base na posição
+        // é necessário o uso de properties mutáveis, para evitar nullables
+        // utilizamos o lateinit, properties que podem ser inicializar depois
+        private lateinit var item: Itens
+
+        init {
+            // implementação do listener do adapter
+            itemView.setOnClickListener {
+                // verificação da existência de valores em property lateinit
+                if (::item.isInitialized) {
+                    quandoClicaNoItem(item)
+                }
+            }
+        }
         fun vincula(item: Itens) {
+            this.item = item
             val itemPerdido = binding.produtoItemItemPerdido
             itemPerdido.text = item.itemPerdido
 

@@ -1,6 +1,7 @@
 package br.com.alura.orgs.ui.activity
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +10,8 @@ import br.com.alura.orgs.dao.ItensDao
 import br.com.alura.orgs.databinding.ActivityListaItensBinding
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.io.File
+import java.io.FileOutputStream
 
 class ListaItensActivity : AppCompatActivity() {
 
@@ -45,6 +48,24 @@ class ListaItensActivity : AppCompatActivity() {
     private fun configuraRecyclerView() {
         val recyclerView = binding.listagemDeItens
         recyclerView.adapter = adapter
+
+        // implementação do listener para abrir a Activity de detalhes do produto
+        // com o produto clicado
+        adapter.quandoClicaNoItem = {
+
+            val tempFile = File.createTempFile("tempFile", null, externalCacheDir)
+            val fos = FileOutputStream(tempFile)
+            it.img?.compress(Bitmap.CompressFormat.PNG, 100, fos)
+            fos.flush()
+            fos.close()
+            val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
+                putExtra("itemPerdido", it.itemPerdido)
+                putExtra("situacao", it.situacao)
+                putExtra("descricao", it.descricao)
+                putExtra("imagem",tempFile.absolutePath)
+            }
+            startActivity(intent)
+        }
     }
 }
 
