@@ -5,9 +5,12 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import br.com.alura.orgs.R
 import br.com.alura.orgs.dao.ItensDao
+import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaItensBinding
+import br.com.alura.orgs.model.Itens
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
@@ -25,12 +28,28 @@ class ListaItensActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
+
+        val db = Room.databaseBuilder(
+            this,
+            AppDatabase::class.java,
+            "ifound.db"
+        ).allowMainThreadQueries()
+            .build()
+        val itemDao = db.itemDao()
+
+        adapter.atualiza(itemDao.buscaTodos())
     }
 
     override fun onResume() {
         super.onResume()
-        adapter.atualiza(dao.buscaTodos())
-
+        val db = Room.databaseBuilder(
+            this,
+            AppDatabase::class.java,
+            "ifound.db"
+        ).allowMainThreadQueries()
+            .build()
+        val itemDao = db.itemDao()
+        adapter.atualiza(itemDao.buscaTodos())
     }
 
     private fun configuraFab() {

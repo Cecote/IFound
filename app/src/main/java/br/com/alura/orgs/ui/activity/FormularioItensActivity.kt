@@ -18,8 +18,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.room.Room
 import br.com.alura.orgs.R
 import br.com.alura.orgs.dao.ItensDao
+import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityFormularioItensBinding
 import br.com.alura.orgs.model.Itens
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
@@ -131,10 +133,17 @@ class FormularioItensActivity : AppCompatActivity() {
 
     private fun configuraBotaoSalvar() {
         val botaoSalvar = binding.activityFormulariosalvar
-        val dao = ItensDao()
+        val db = Room.databaseBuilder(
+            this,
+            AppDatabase::class.java,
+            "ifound.db"
+        ).allowMainThreadQueries()
+            .build()
+        val itemDao = db.itemDao()
+
         botaoSalvar.setOnClickListener {
             val novoItem = criaItem()
-            dao.add(novoItem)
+            itemDao.salva(novoItem)
             finish()
         }
     }
