@@ -49,6 +49,7 @@
                 android:id="@+id/activity_formulario_item_itemperdido"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/architects_daughter"
                 android:hint="@string/item" />
         </com.google.android.material.textfield.TextInputLayout>
 
