@@ -4,22 +4,17 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
-import br.com.alura.orgs.R
-import br.com.alura.orgs.dao.ItensDao
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaItensBinding
-import br.com.alura.orgs.model.Itens
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.io.File
 import java.io.FileOutputStream
 
 class ListaItensActivity : AppCompatActivity() {
 
-    private val dao = ItensDao()
-    private val adapter = ListaProdutosAdapter(context = this, itens = dao.buscaTodos())
+
+    private val adapter = ListaProdutosAdapter(context = this)
     private val binding by lazy {
         ActivityListaItensBinding.inflate(layoutInflater)
     }
@@ -28,26 +23,11 @@ class ListaItensActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
-
-        val db = Room.databaseBuilder(
-            this,
-            AppDatabase::class.java,
-            "ifound.db"
-        ).allowMainThreadQueries()
-            .build()
-        val itemDao = db.itemDao()
-
-        adapter.atualiza(itemDao.buscaTodos())
     }
 
     override fun onResume() {
         super.onResume()
-        val db = Room.databaseBuilder(
-            this,
-            AppDatabase::class.java,
-            "ifound.db"
-        ).allowMainThreadQueries()
-            .build()
+        val db = AppDatabase.instancia(this)
         val itemDao = db.itemDao()
         adapter.atualiza(itemDao.buscaTodos())
     }

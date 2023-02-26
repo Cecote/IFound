@@ -19,7 +19,7 @@ import kotlin.coroutines.coroutineContext
 
 class ListaProdutosAdapter(
     private val context: Context,
-    itens: List<Itens>,
+    itens: List<Itens> = emptyList(),
     // declaração da função para o listener do adapter
     var quandoClicaNoItem: (produto: Itens) -> Unit = {}
 ) : RecyclerView.Adapter<ListaProdutosAdapter.ViewHolder>() {
