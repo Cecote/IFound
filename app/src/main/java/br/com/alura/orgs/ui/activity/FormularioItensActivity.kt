@@ -26,7 +26,7 @@ class FormularioItensActivity : AppCompatActivity() {
     private var urlzinha:Bitmap? = null
     private lateinit var dialog: AlertDialog
     companion object{
-        private val PERMISSAO_GALERIA = android.Manifest.permission.READ_EXTERNAL_STORAGE
+        private val PERMISSAO_GALERIA = android.Manifest.permission.READ_MEDIA_IMAGES
     }
 
     private val requestGaleria =
