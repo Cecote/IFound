@@ -4,7 +4,9 @@ import android.content.ClipData.Item
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import br.com.alura.orgs.R
 import br.com.alura.orgs.databinding.ActivityDetalhesProdutoBinding
 import br.com.alura.orgs.model.Itens
 import br.com.alura.orgs.ui.activity.FormularioItensActivity
@@ -21,6 +23,10 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         tentaCarregarProduto()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_detalhes_itens, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
     private fun tentaCarregarProduto() {
         // tentativa de buscar o produto se ele existir,
         // caso contrário, finalizar a Activity

@@ -21,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:ellipsize="end"
-            android:fontFamily="@font/aclonica"
             android:maxLines="1"
             android:textSize="20sp"
             android:textStyle="bold"
