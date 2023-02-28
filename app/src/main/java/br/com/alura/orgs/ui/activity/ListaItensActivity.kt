@@ -62,6 +62,9 @@ class ListaItensActivity : AppCompatActivity() {
                 putExtra("situacao", it.situacao)
                 putExtra("descricao", it.descricao)
                 putExtra("imagem",tempFile.absolutePath)
+                putExtra("contato", it.contato)
+                putExtra("local", it.local)
+                putExtra("id", it.id)
             }
             startActivity(intent)
         }

@@ -9,11 +9,11 @@ import kotlinx.parcelize.Parcelize
 @Entity
 @Parcelize
 data class Itens(
-        @PrimaryKey(autoGenerate = true) val id: Long = 0L,
-        val itemPerdido: String,
-        val situacao: String,
-        val local: String,
-        val contato: String,
-        val img: Bitmap? = null,
-        val descricao: String,
+    @PrimaryKey(autoGenerate = true) var id: Long = 0L,
+    var itemPerdido: String,
+    var situacao: String,
+    var local: String,
+    var contato: String,
+    var img: Bitmap? = null,
+    var descricao: String,
 ) : Parcelable
