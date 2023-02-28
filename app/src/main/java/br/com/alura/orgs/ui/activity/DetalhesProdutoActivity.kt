@@ -22,12 +22,11 @@ private const val TAG = "DetalhesProduto"
 class DetalhesProdutoActivity : AppCompatActivity() {
 
     private var itemId: Long? = null
-    private lateinit var item2: Itens
+    private var item2: Itens? = null
     private val binding by lazy {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
     }
-
-    val itemDao by lazy {
+    private val itemDao by lazy {
         AppDatabase.instancia(this).itemDao()
     }
 
@@ -40,8 +39,11 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         itemId?.let { id ->
-            itemDao.buscaPorId(id)
+            item2 = itemDao.buscaPorId(id)
         }
+        item2?.let {
+            preencheCampos(it)
+        }?: finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -50,32 +52,31 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(itemAux: MenuItem): Boolean {
-        if (::item2.isInitialized) {
-
-            when (itemAux.itemId) {
+        when (itemAux.itemId) {
                 R.id.menu_detalhes_itens_remover -> {
-                    itemDao.remove(item2)
+                    item2?.let { itemDao.remove(it) }
+
                     finish()
                 }
                 R.id.menu_detalhes_itens_editar -> {
                     val tempFile = File.createTempFile("tempFile", null, externalCacheDir)
                     val fos = FileOutputStream(tempFile)
-                    item2.img?.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                    item2?.img?.compress(Bitmap.CompressFormat.PNG, 100, fos)
                     fos.flush()
                     fos.close()
                     Intent(this, FormularioItensActivity::class.java).apply {
-                        putExtra("itemPerdido", item2.itemPerdido)
-                        putExtra("situacao", item2.situacao)
-                        putExtra("descricao", item2.descricao)
+                        putExtra("itemPerdido", item2?.itemPerdido)
+                        putExtra("situacao", item2?.situacao)
+                        putExtra("descricao", item2?.descricao)
                         putExtra("imagem", tempFile.absolutePath)
-                        putExtra("contato", item2.contato)
-                        putExtra("local", item2.local)
-                        putExtra("id", item2.id)
+                        putExtra("contato", item2?.contato)
+                        putExtra("local", item2?.local)
+                        putExtra("id", item2?.id)
                         startActivity(this)
                     }
                 }
             }
-        }
+
         return super.onOptionsItemSelected(itemAux)
     }
 
@@ -100,7 +101,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
             img = bitmap
         )
         item2 = item
-        itemId = item2.id
+        itemId = item2?.id
         preencheCampos(item)
     }
 
