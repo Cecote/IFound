@@ -3,6 +3,7 @@ package br.com.alura.orgs.ui.activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
@@ -23,6 +24,7 @@ class FormularioItensActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityFormularioItensBinding.inflate(layoutInflater)
     }
+    private var idItem = 0L
     private var urlzinha:Bitmap? = null
     private lateinit var dialog: AlertDialog
     companion object{
@@ -77,6 +79,36 @@ class FormularioItensActivity : AppCompatActivity() {
             verificaPermissaoGaleria()
         }
         configuraBotaoSalvar()
+
+
+        val path = intent.getStringExtra("imagem")
+        val bitmap = BitmapFactory.decodeFile(path)
+        val itemPerdido = intent.getStringExtra("itemPerdido")
+        val situacao = intent.getStringExtra("situacao")
+        val descricao = intent.getStringExtra("descricao")
+        val contato = intent.getStringExtra("contato")
+        val id = intent.getLongExtra("id", -1L)
+        val local = intent.getStringExtra("local")
+        val item = Itens(
+            id = id,
+            itemPerdido = itemPerdido.toString(),
+            situacao = situacao.toString(),
+            descricao = descricao.toString(),
+            contato = contato.toString(),
+            local = local.toString(),
+            img = bitmap
+        )
+
+        if(situacao!=null) {
+            title = "Editar Item"
+            idItem = id
+            binding.activityFormularioItemImagem.setImageBitmap(item.img)
+            binding.activityFormularioItemItemperdido.setText(item.itemPerdido)
+            binding.activityFormularioItemDescricao.setText(item.descricao)
+            binding.activityFormularioItemSituacao.setText(item.situacao)
+            binding.activityFormularioItemLocal.setText(item.local)
+            binding.activityFormularioContato.setText(item.contato)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -129,7 +161,11 @@ class FormularioItensActivity : AppCompatActivity() {
 
         botaoSalvar.setOnClickListener {
             val novoItem = criaItem()
-            itemDao.salva(novoItem)
+            if(idItem > 0){
+                itemDao.edita(novoItem)
+            }else {
+                itemDao.salva(novoItem)
+            }
             finish()
         }
     }
@@ -151,6 +187,7 @@ class FormularioItensActivity : AppCompatActivity() {
         val descricao = campoDescricao.text.toString()
 
         return Itens(
+            id = idItem,
             itemPerdido = itemPerdido,
             situacao = situacao,
             local = local,

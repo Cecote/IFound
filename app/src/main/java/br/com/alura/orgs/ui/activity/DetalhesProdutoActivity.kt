@@ -1,6 +1,7 @@
 package br.com.alura.orgs.ui.activity
 
 import android.content.ClipData.Item
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -13,13 +14,21 @@ import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityDetalhesProdutoBinding
 import br.com.alura.orgs.model.Itens
 import br.com.alura.orgs.ui.activity.FormularioItensActivity
+import java.io.File
+import java.io.FileOutputStream
 
 private const val TAG = "DetalhesProduto"
+
 class DetalhesProdutoActivity : AppCompatActivity() {
 
-    private lateinit var item2 : Itens
+    private var itemId: Long? = null
+    private lateinit var item2: Itens
     private val binding by lazy {
         ActivityDetalhesProdutoBinding.inflate(layoutInflater)
+    }
+
+    val itemDao by lazy {
+        AppDatabase.instancia(this).itemDao()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,23 +37,42 @@ class DetalhesProdutoActivity : AppCompatActivity() {
         tentaCarregarProduto()
     }
 
+    override fun onResume() {
+        super.onResume()
+        itemId?.let { id ->
+            itemDao.buscaPorId(id)
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_detalhes_itens, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(itemAux: MenuItem): Boolean {
-        if(::item2.isInitialized){
-            val db = AppDatabase.instancia(this)
-            val itemDao = db.itemDao()
+        if (::item2.isInitialized) {
+
             when (itemAux.itemId) {
                 R.id.menu_detalhes_itens_remover -> {
                     itemDao.remove(item2)
                     finish()
-
                 }
                 R.id.menu_detalhes_itens_editar -> {
-                    Log.i(TAG, "onOptionsItemSelected: editar")
+                    val tempFile = File.createTempFile("tempFile", null, externalCacheDir)
+                    val fos = FileOutputStream(tempFile)
+                    item2.img?.compress(Bitmap.CompressFormat.PNG, 100, fos)
+                    fos.flush()
+                    fos.close()
+                    Intent(this, FormularioItensActivity::class.java).apply {
+                        putExtra("itemPerdido", item2.itemPerdido)
+                        putExtra("situacao", item2.situacao)
+                        putExtra("descricao", item2.descricao)
+                        putExtra("imagem", tempFile.absolutePath)
+                        putExtra("contato", item2.contato)
+                        putExtra("local", item2.local)
+                        putExtra("id", item2.id)
+                        startActivity(this)
+                    }
                 }
             }
         }
@@ -72,6 +100,7 @@ class DetalhesProdutoActivity : AppCompatActivity() {
             img = bitmap
         )
         item2 = item
+        itemId = item2.id
         preencheCampos(item)
     }
 

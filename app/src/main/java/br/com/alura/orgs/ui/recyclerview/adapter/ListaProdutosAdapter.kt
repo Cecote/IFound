@@ -56,12 +56,12 @@ class ListaProdutosAdapter(
             contato.text = item.contato
 
             // uma possível alternativa para esconder o container da img caso o usuário nao coloque nenhuma
-//            val visibility = if(item.img != null){
-//                View.VISIBLE
-//            }else{
-//                View.GONE
-//            }
-//            binding.imageView.visibility = visibility
+            val visibility = if(item.img != null){
+                View.VISIBLE
+            }else{
+                View.GONE
+            }
+            binding.imageView.visibility = visibility
 
 
             val icon:Bitmap = BitmapFactory.decodeResource(context.resources,
