@@ -31,8 +31,10 @@ class LoginActivity : AppCompatActivity() {
             val usuario = binding.activityLoginUsuario.text.toString()
             val senha = binding.activityLoginSenha.text.toString()
             Log.i("LoginActivity", "onCreate: $usuario - $senha")
-            usuarioDao.autentica(usuario, senha)?.let {
-                vaiPara(ListaItensActivity::class.java)
+            usuarioDao.autentica(usuario, senha)?.let {usuario ->
+                vaiPara(ListaItensActivity::class.java){
+                    putExtra("CHAVE_USUARIO_ID", usuario.id)
+                }
             } ?: Toast.makeText(this@LoginActivity, "Falha da Autenticacao", Toast.LENGTH_SHORT).show()
 
         }

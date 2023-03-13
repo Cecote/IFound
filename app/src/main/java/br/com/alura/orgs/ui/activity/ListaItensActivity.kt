@@ -3,10 +3,12 @@ package br.com.alura.orgs.ui.activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaItensBinding
+import br.com.alura.orgs.model.Usuario
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
 import java.io.File
 import java.io.FileOutputStream
@@ -18,11 +20,19 @@ class ListaItensActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityListaItensBinding.inflate(layoutInflater)
     }
+
+    private val usuarioDao by lazy {
+        AppDatabase.instancia(this).usuarioDao()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
+        intent.getStringExtra("CHAVE_USUARIO_ID")?.let { usuarioId ->
+            val usuario: Usuario = usuarioDao.buscaPorId(usuarioId)
+            Log.i("ListaProdutos", "OnCreate: $usuario")
+        }
     }
 
     override fun onResume() {
