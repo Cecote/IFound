@@ -4,13 +4,28 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
+import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityListaItensBinding
+import br.com.alura.orgs.extensions.vaiPara
 import br.com.alura.orgs.model.Usuario
+import br.com.alura.orgs.preferences.dataStore
+import br.com.alura.orgs.preferences.usuarioLogadoPreferences
 import br.com.alura.orgs.ui.recyclerview.adapter.ListaProdutosAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.withContext
 import java.io.File
+
 import java.io.FileOutputStream
 
 class ListaItensActivity : AppCompatActivity() {
@@ -21,6 +36,11 @@ class ListaItensActivity : AppCompatActivity() {
         ActivityListaItensBinding.inflate(layoutInflater)
     }
 
+    private val itemDao by lazy {
+        val db = AppDatabase.instancia(this)
+        db.itemDao()
+    }
+
     private val usuarioDao by lazy {
         AppDatabase.instancia(this).usuarioDao()
     }
@@ -29,18 +49,52 @@ class ListaItensActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraRecyclerView()
         configuraFab()
-        intent.getStringExtra("CHAVE_USUARIO_ID")?.let { usuarioId ->
-            val usuario: Usuario = usuarioDao.buscaPorId(usuarioId)
-            Log.i("ListaProdutos", "OnCreate: $usuario")
+        lifecycleScope.launch {
+            launch {
+                itemDao.buscaTodos().collect { itens ->
+                    adapter.atualiza(itens)
+                }
+            }
+
+            launch {
+                dataStore.data.collect {preferences ->
+                    preferences[usuarioLogadoPreferences]?.let { usuarioId ->
+                        launch {
+                            usuarioDao.buscaPorId(usuarioId).collect {
+                                Log.i("ListaProdutos", "OnCreate: $it")
+                            }
+                        }
+                    } ?: vaiParaLogin()
+
+                }
+            }
         }
+
+
     }
 
-    override fun onResume() {
-        super.onResume()
-        val db = AppDatabase.instancia(this)
-        val itemDao = db.itemDao()
-        adapter.atualiza(itemDao.buscaTodos())
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_lista_itens, menu)
+        return super.onCreateOptionsMenu(menu)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_lista_produtos_sair_do_app -> {
+                lifecycleScope.launch {
+                    dataStore.edit { preferences ->
+                        preferences.remove(usuarioLogadoPreferences)
+                    }
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+    private fun vaiParaLogin() {
+        vaiPara(LoginActivity::class.java)
+        finish()
+    }
+
 
     private fun configuraFab() {
         val fab = binding.floatingActionButton
@@ -68,13 +122,7 @@ class ListaItensActivity : AppCompatActivity() {
             fos.flush()
             fos.close()
             val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
-                putExtra("itemPerdido", it.itemPerdido)
-                putExtra("situacao", it.situacao)
-                putExtra("descricao", it.descricao)
-                putExtra("imagem",tempFile.absolutePath)
-                putExtra("contato", it.contato)
-                putExtra("local", it.local)
-                putExtra("id", it.id)
+                putExtra(CHAVE_PRODUTO_ID, it.id)
             }
             startActivity(intent)
         }

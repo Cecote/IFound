@@ -4,9 +4,15 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityLoginBinding
 import br.com.alura.orgs.extensions.vaiPara
+import br.com.alura.orgs.preferences.dataStore
+import br.com.alura.orgs.preferences.usuarioLogadoPreferences
+import kotlinx.coroutines.launch
 
 
 class LoginActivity : AppCompatActivity() {
@@ -31,12 +37,15 @@ class LoginActivity : AppCompatActivity() {
             val usuario = binding.activityLoginUsuario.text.toString()
             val senha = binding.activityLoginSenha.text.toString()
             Log.i("LoginActivity", "onCreate: $usuario - $senha")
-            usuarioDao.autentica(usuario, senha)?.let {usuario ->
-                vaiPara(ListaItensActivity::class.java){
-                    putExtra("CHAVE_USUARIO_ID", usuario.id)
-                }
-            } ?: Toast.makeText(this@LoginActivity, "Falha da Autenticacao", Toast.LENGTH_SHORT).show()
-
+            lifecycleScope.launch{
+                usuarioDao.autentica(usuario, senha)?.let {usuario ->
+                    dataStore.edit {preferences ->
+                        preferences[usuarioLogadoPreferences] = usuario.id
+                    }
+                    vaiPara(ListaItensActivity::class.java)
+                    finish()
+                } ?: Toast.makeText(this@LoginActivity, "Falha da Autenticacao", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

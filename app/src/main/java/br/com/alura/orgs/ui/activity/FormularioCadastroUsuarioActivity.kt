@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityFormularioCadastroUsuarioBinding
 import br.com.alura.orgs.model.Usuario
+import kotlinx.coroutines.launch
 
 class FormularioCadastroUsuarioActivity : AppCompatActivity() {
 
@@ -30,13 +32,16 @@ class FormularioCadastroUsuarioActivity : AppCompatActivity() {
         binding.activityFormularioCadastroBotaoCadastrar.setOnClickListener {
             val novoUsuario = criaUsuario()
             Log.i("CadastroUsuario", "onCreate: $novoUsuario")
-            try {
-                usuarioDao.salva(novoUsuario)
-                finish()
-            } catch (e: Exception) {
-                Log.e("CadastroUsuario", "configuraBotaoCadastrar", e)
-                Toast.makeText(this@FormularioCadastroUsuarioActivity, "Falha ao cadastrar usuario!", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                try {
+                    usuarioDao.salva(novoUsuario)
+                    finish()
+                } catch (e: Exception) {
+                    Log.e("CadastroUsuario", "configuraBotaoCadastrar", e)
+                    Toast.makeText(this@FormularioCadastroUsuarioActivity, "Falha ao cadastrar usuario!", Toast.LENGTH_SHORT).show()
+                }
             }
+
         }
     }
 
