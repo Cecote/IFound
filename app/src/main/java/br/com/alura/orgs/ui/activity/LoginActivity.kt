@@ -31,6 +31,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         configuraBotaoCadastrar()
         configuraBotaoEntrar()
+        configuraBotaoEntrarVisitante()
     }
 
     private fun configuraBotaoEntrar() {
@@ -47,12 +48,22 @@ class LoginActivity : AppCompatActivity() {
                 dataStore.edit { preferences ->
                     preferences[usuarioLogadoPreferences] = usuario.id
                 }
-                vaiPara(ListaItensActivity::class.java)
+                if(usuario.id=="calegari" || usuario.id=="cecote" ||usuario.id=="mayan" ){
+                    vaiPara(ListaItensActivity::class.java)
+                }else{
+                    vaiPara(ListaItensUsuarioComumActivity::class.java)
+                }
+
                 finish()
             } ?: toast("Usuario ou senha incorretos")
         }
     }
 
+    private fun configuraBotaoEntrarVisitante() {
+        binding.activityLoginBotaoEntrarVisitante.setOnClickListener {
+            vaiPara(ListaItensVisitanteActivity::class.java)
+        }
+    }
     private fun configuraBotaoCadastrar() {
         binding.activityLoginBotaoCadastrar.setOnClickListener {
             vaiPara(FormularioCadastroUsuarioActivity::class.java)

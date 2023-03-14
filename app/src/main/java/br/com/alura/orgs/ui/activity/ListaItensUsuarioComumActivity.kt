@@ -1,5 +1,6 @@
 package br.com.alura.orgs.ui.activity
 
+
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -21,7 +22,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 
-class ListaItensActivity : AppCompatActivity() {
+class ListaItensUsuarioComumActivity : AppCompatActivity() {
 
 
     private val adapter = ListaProdutosAdapter(context = this)
@@ -114,12 +115,10 @@ class ListaItensActivity : AppCompatActivity() {
             it.img?.compress(Bitmap.CompressFormat.PNG, 100, fos)
             fos.flush()
             fos.close()
-            val intent = Intent(this, DetalhesProdutoActivity::class.java).apply {
+            val intent = Intent(this, DetalhesProdutoUsuariosActivity::class.java).apply {
                 putExtra(CHAVE_PRODUTO_ID, it.id)
             }
             startActivity(intent)
         }
     }
 }
-
-

@@ -1,24 +1,15 @@
 package br.com.alura.orgs.ui.activity
 
-import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import br.com.alura.orgs.R
 import br.com.alura.orgs.database.AppDatabase
 import br.com.alura.orgs.databinding.ActivityDetalhesProdutoBinding
 import br.com.alura.orgs.model.Itens
-import br.com.alura.orgs.ui.activity.FormularioItensActivity
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 
-
-class DetalhesProdutoActivity : AppCompatActivity() {
+class DetalhesProdutoUsuariosActivity : AppCompatActivity(){
 
     private var itemId: Long = 0L
     private var item2: Itens? = null
@@ -42,46 +33,13 @@ class DetalhesProdutoActivity : AppCompatActivity() {
     private fun buscaItem() {
         lifecycleScope.launch {
             itemDao.buscaPorId(itemId).collect { itemEncontrado ->
-               item2 = itemEncontrado
+                item2 = itemEncontrado
                 item2?.let {
                     preencheCampos(it)
                 } ?: finish()
             }
         }
 
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_detalhes_itens, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(itemAux: MenuItem): Boolean {
-        when (itemAux.itemId) {
-                R.id.menu_detalhes_itens_remover -> {
-                        item2?.let {
-                            lifecycleScope.launch {
-                                itemDao.remove(it)
-                                finish()
-                            }
-                        }
-
-
-                }
-                R.id.menu_detalhes_itens_editar -> {
-                    val tempFile = File.createTempFile("tempFile", null, externalCacheDir)
-                    val fos = FileOutputStream(tempFile)
-                    item2?.img?.compress(Bitmap.CompressFormat.PNG, 100, fos)
-                    fos.flush()
-                    fos.close()
-                    Intent(this, FormularioItensActivity::class.java).apply {
-                        putExtra(CHAVE_PRODUTO_ID, itemId)
-                        startActivity(this)
-                    }
-                }
-            }
-
-        return super.onOptionsItemSelected(itemAux)
     }
 
     private fun tentaCarregarProduto() {

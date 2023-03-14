@@ -81,6 +81,16 @@
             app:layout_constraintStart_toStartOf="@id/textInputlayout_senha"
             app:layout_constraintTop_toBottomOf="@id/textInputlayout_senha" />
 
+        <Button
+            android:id="@+id/activity_login_botao_entrar_visitante"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Entrar como visitante"
+            app:layout_constraintEnd_toEndOf="@id/activity_login_botao_entrar"
+            app:layout_constraintStart_toStartOf="@id/activity_login_botao_entrar"
+            app:layout_constraintTop_toBottomOf="@id/activity_login_botao_entrar" />
+
 
         <Button
             android:id="@+id/activity_login_botao_cadastrar"
@@ -92,10 +102,10 @@
             android:textColor="@color/Orange"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/activity_login_botao_entrar"
+            app:layout_constraintEnd_toEndOf="@+id/activity_login_botao_entrar_visitante"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/activity_login_botao_entrar"
-            app:layout_constraintTop_toBottomOf="@id/activity_login_botao_entrar"
+            app:layout_constraintStart_toStartOf="@+id/activity_login_botao_entrar_visitante"
+            app:layout_constraintTop_toBottomOf="@id/activity_login_botao_entrar_visitante"
             app:layout_constraintVertical_bias="0.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
