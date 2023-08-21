@@ -11,39 +11,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
 import br.com.alura.orgs.database.AppDatabase
-import br.com.alura.orgs.database.dao.ItemDao
 import br.com.alura.orgs.databinding.ActivityFormularioItensBinding
 import br.com.alura.orgs.model.Itens
-import br.com.alura.orgs.preferences.dataStore
-import br.com.alura.orgs.preferences.usuarioLogadoPreferences
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FormularioItensActivity : AppCompatActivity() {
 
     private val binding by lazy {
         ActivityFormularioItensBinding.inflate(layoutInflater)
     }
-
-    private val itemDao: ItemDao by lazy {
-        val db = AppDatabase.instancia(this)
-        db.itemDao()
-    }
-
-    private val usuarioDao by lazy {
-        AppDatabase.instancia(this).usuarioDao()
-    }
-
     private var idItem = 0L
     private var urlzinha:Bitmap? = null
     private lateinit var dialog: AlertDialog
@@ -119,52 +99,16 @@ class FormularioItensActivity : AppCompatActivity() {
             img = bitmap
         )
 
-
-        tentaCarregarProduto()
-
-        lifecycleScope.launch {
-            dataStore.data.collect {preferences ->
-                preferences[usuarioLogadoPreferences]?.let { usuarioId ->
-                    usuarioDao.buscaPorId(usuarioId).collect {
-                        Log.i("FormularioProdutos", "OnCreate: $it")
-                    }
-                }
-
-            }
+        if(situacao!=null) {
+            title = "Editar Item"
+            idItem = id
+            binding.activityFormularioItemImagem.setImageBitmap(item.img)
+            binding.activityFormularioItemItemperdido.setText(item.itemPerdido)
+            binding.activityFormularioItemDescricao.setText(item.descricao)
+            binding.activityFormularioItemSituacao.setText(item.situacao)
+            binding.activityFormularioItemLocal.setText(item.local)
+            binding.activityFormularioContato.setText(item.contato)
         }
-
-
-    }
-
-    private fun tentaCarregarProduto() {
-        idItem = intent.getLongExtra(CHAVE_PRODUTO_ID, 0L)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        tentaBuscarProduto()
-    }
-
-    private fun tentaBuscarProduto() {
-        lifecycleScope.launch{
-            itemDao.buscaPorId(idItem).collect {
-                it?.let { itemEncontrado ->
-                    preencheCampos(it)
-                }
-
-            }
-        }
-
-    }
-
-    private fun preencheCampos(item: Itens) {
-        title = "Editar Item"
-        binding.activityFormularioItemImagem.setImageBitmap(item.img)
-        binding.activityFormularioItemItemperdido.setText(item.itemPerdido)
-        binding.activityFormularioItemDescricao.setText(item.descricao)
-        binding.activityFormularioItemSituacao.setText(item.situacao)
-        binding.activityFormularioItemLocal.setText(item.local)
-        binding.activityFormularioContato.setText(item.contato)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -212,14 +156,17 @@ class FormularioItensActivity : AppCompatActivity() {
 
     private fun configuraBotaoSalvar() {
         val botaoSalvar = binding.activityFormulariosalvar
-
+        val db = AppDatabase.instancia(this)
+        val itemDao = db.itemDao()
 
         botaoSalvar.setOnClickListener {
             val novoItem = criaItem()
-            lifecycleScope.launch {
+            if(idItem > 0){
+                itemDao.edita(novoItem)
+            }else {
                 itemDao.salva(novoItem)
-                finish()
             }
+            finish()
         }
     }
 
